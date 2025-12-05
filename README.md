@@ -82,15 +82,15 @@ Edit the HTML/CSS directly - everything is self-contained with inline styles.
 | 3 | **Database** | Data aggregation: AI responses → Mentions, Competitors, Context |
 | 4 | **Article** | Content generation: Database + Crawl + Research → AEO Article |
 
-## 🤖 AI Models Shown
+## 🤖 AI Models Shown (December 2025)
 
 | Platform | Model | Logo |
 |----------|-------|------|
-| Perplexity | sonar-reasoning | ✅ |
-| Google Gemini | gemini-2.5-pro | ✅ |
-| Claude | claude-sonnet-4 | ✅ |
-| Mistral | mistral-large-2411 | ✅ |
-| ChatGPT | gpt-4.5-preview | ✅ |
+| Perplexity | sonar-pro | ✅ |
+| Google Gemini | gemini-3.0-pro | ✅ |
+| Claude | claude-opus-4.5 | ✅ |
+| Mistral | mixtral-8x22b | ✅ |
+| ChatGPT | gpt-5 | ✅ |
 
 ## 📄 License
 
