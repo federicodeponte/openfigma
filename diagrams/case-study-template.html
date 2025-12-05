@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study - SCAILE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 40px;
+      position: relative;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    /* Case Study Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 1px solid #e5e5e5;
+      border-radius: 100px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .badge-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Main Headline */
+    .headline {
+      text-align: center;
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .headline .muted {
+      color: #9ca3af;
+    }
+
+    .headline .bold {
+      color: #1a1a1a;
+    }
+
+    /* Quote Card */
+    .quote-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .quote-text {
+      font-size: 22px;
+      line-height: 1.5;
+      color: #4b5563;
+      margin-bottom: 32px;
+    }
+
+    .quote-text strong {
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .author-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #e5e5e5;
+      overflow: hidden;
+    }
+
+    .author-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .author-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .author-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .author-role {
+      font-size: 16px;
+      color: #6b7280;
+    }
+
+    /* Logos Footer */
+    .logos-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 40px;
+      background: #e5e5e5;
+    }
+
+    /* SCAILE specific styling */
+    .scaile-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scaile-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Badge -->
+    <div class="badge">
+      <svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Case Study
+    </div>
+
+    <!-- Headline -->
+    <h1 class="headline">
+      <span class="bold">Acme Corp drove a</span> <span class="muted">7x increase</span><br>
+      <span class="bold">in demo requests from</span><br>
+      <span class="bold">LLMs</span> <span class="muted">with SCAILE</span>
+    </h1>
+
+    <!-- Quote Card -->
+    <div class="quote-card">
+      <p class="quote-text">
+        "AI search is taking off as a growth channel and <strong>SCAILE is the rocket fuel</strong> every company needs. With their insights, we now lead the integration space in LLM visibility and have generated significant pipeline within months."
+      </p>
+      <div class="quote-author">
+        <div class="author-avatar">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar">
+        </div>
+        <div class="author-info">
+          <div class="author-name">John Smith</div>
+          <div class="author-role">Head of Growth, Acme Corp</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logos -->
+    <div class="logos-card">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        ACME
+      </div>
+      <div class="logo-divider"></div>
+      <div class="logo scaile-logo">
+        <div class="scaile-icon"></div>
+        SCAILE
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
