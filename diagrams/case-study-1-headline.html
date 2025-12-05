@@ -15,8 +15,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 60px 60px 80px;
+      padding: 60px 80px 80px;
       position: relative;
+      overflow: hidden;
     }
     body::before {
       content: '';
@@ -45,12 +46,13 @@
     .badge svg { width: 20px; height: 20px; }
     .headline {
       text-align: center;
-      font-size: 72px;
+      font-size: 42px;
       font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
       margin-bottom: auto;
-      padding: 0 20px;
+      padding: 0;
+      max-width: 100%;
     }
     .headline .muted { color: #b0b0b0; }
     .headline .bold { color: #1a1a1a; }
