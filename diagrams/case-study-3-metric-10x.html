@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study - 10x Boost</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #f8f8f8;
+      width: 1080px;
+      height: 1350px;
+      display: flex;
+      flex-direction: column;
+      padding: 60px;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      border: 1px solid #e8e8e8;
+      border-radius: 100px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      width: fit-content;
+      margin-bottom: 60px;
+    }
+    .badge svg { width: 20px; height: 20px; }
+    .headline {
+      font-size: 72px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 50px;
+    }
+    .headline .muted { color: #b0b0b0; }
+    .headline .bold { color: #1a1a1a; }
+    .quote-card {
+      background: white;
+      border-radius: 28px;
+      padding: 50px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      flex: 1;
+    }
+    .quote-text {
+      font-size: 30px;
+      line-height: 1.5;
+      color: #6b7280;
+    }
+    .quote-text strong {
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+    .logos-card {
+      background: #f0f0f0;
+      border-radius: 28px;
+      padding: 40px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.02em;
+    }
+    .logo-icon { width: 32px; height: 32px; }
+    .logo-divider { width: 1px; height: 36px; background: #d0d0d0; }
+    .scaile-icon {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <rect x="3" y="3" width="7" height="7" rx="1"/>
+      <rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/>
+      <rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>
+    Case Study
+  </div>
+
+  <h1 class="headline">
+    <span class="muted">10x boost</span> <span class="bold">in LLM</span><br>
+    <span class="bold">search traffic</span>
+  </h1>
+
+  <div class="quote-card">
+    <p class="quote-text">
+      "<strong>SCAILE was intuitive and self-serve from day one.</strong> Its actionable insights enable me to create content that outranks competitors with 10x our resources."
+    </p>
+  </div>
+
+  <div class="logos-card">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M4 6h16M4 12h16M4 18h10"/>
+      </svg>
+      CLIENT
+    </div>
+    <div class="logo-divider"></div>
+    <div class="logo">
+      <div class="scaile-icon"></div>
+      SCAILE
+    </div>
+  </div>
+</body>
+</html>
+
