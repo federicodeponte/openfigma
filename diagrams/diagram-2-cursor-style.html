@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenRouter Flow - Cursor Style</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0b;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient background glow */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    /* Step number */
+    .step-badge {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .step-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Flow layout */
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Input card */
+    .input-card {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 180px;
+    }
+
+    .input-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #818cf8;
+    }
+
+    .input-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .input-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f5f5f5;
+    }
+
+    .input-subtitle {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Center node */
+    .center-node {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .node-box {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 
+        0 0 40px rgba(99, 102, 241, 0.3),
+        0 0 80px rgba(99, 102, 241, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .node-box::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+      border-radius: 24px;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      padding: 1px;
+    }
+
+    .node-icon {
+      color: white;
+    }
+
+    .node-label {
+      position: absolute;
+      bottom: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      font-weight: 600;
+      color: #f5f5f5;
+      white-space: nowrap;
+    }
+
+    /* AI Model cards */
+    .models-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .model-card {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 220px;
+    }
+
+    .model-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .model-logo img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    /* Platform-specific logo backgrounds */
+    .model-logo.perplexity { background: #1a1a1a; }
+    .model-logo.gemini { background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%); }
+    .model-logo.claude { background: #d4a574; }
+    .model-logo.mistral { background: #fff; }
+    .model-logo.chatgpt { background: #10a37f; }
+
+    .model-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .model-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f5f5f5;
+    }
+
+    .model-version {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.35);
+      font-family: 'SF Mono', Monaco, monospace;
+    }
+
+    .model-status {
+      width: 22px;
+      height: 22px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #22c55e;
+    }
+
+    /* Connection lines - SVG */
+    .connections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .connections svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .connection-line {
+      stroke: url(#lineGradient);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.6;
+    }
+
+    .connection-line-glow {
+      stroke: #6366f1;
+      stroke-width: 4;
+      fill: none;
+      opacity: 0.1;
+      filter: blur(2px);
+    }
+
+    /* Animated pulse on lines */
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+
+    .connection-line {
+      animation: pulse 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="step-badge">
+      <div class="step-number">2</div>
+      <span class="step-label">Query Distribution</span>
+    </div>
+
+    <svg class="connections" viewBox="0 0 1100 400" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.3" />
+          <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:0.6" />
+          <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.3" />
+        </linearGradient>
+      </defs>
+      <!-- Input to center -->
+      <path class="connection-line-glow" d="M 205 200 Q 320 200 420 200" />
+      <path class="connection-line" d="M 205 200 Q 320 200 420 200" />
+      <!-- Center to outputs -->
+      <path class="connection-line-glow" d="M 520 200 Q 620 200 620 80 Q 620 45 700 45" />
+      <path class="connection-line" d="M 520 200 Q 620 200 620 80 Q 620 45 700 45" />
+      <path class="connection-line-glow" d="M 520 200 Q 620 200 620 120 Q 620 115 700 115" />
+      <path class="connection-line" d="M 520 200 Q 620 200 620 120 Q 620 115 700 115" />
+      <path class="connection-line-glow" d="M 520 200 Q 620 200 700 200" />
+      <path class="connection-line" d="M 520 200 Q 620 200 700 200" />
+      <path class="connection-line-glow" d="M 520 200 Q 620 200 620 280 Q 620 285 700 285" />
+      <path class="connection-line" d="M 520 200 Q 620 200 620 280 Q 620 285 700 285" />
+      <path class="connection-line-glow" d="M 520 200 Q 620 200 620 350 Q 620 355 700 355" />
+      <path class="connection-line" d="M 520 200 Q 620 200 620 350 Q 620 355 700 355" />
+    </svg>
+
+    <div class="flow">
+      <!-- Input -->
+      <div class="card input-card">
+        <div class="input-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+        </div>
+        <div class="input-text">
+          <div class="input-title">Search Queries</div>
+          <div class="input-subtitle">50 prompts</div>
+        </div>
+      </div>
+
+      <!-- Center Node -->
+      <div class="center-node">
+        <div class="node-box">
+          <svg class="node-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.82-.13 2.67-.36"/>
+            <path d="M12 2c-2.8 0-5 4.5-5 10s2.2 10 5 10"/>
+            <path d="M12 2c2.8 0 5 4.5 5 10"/>
+            <path d="M2 12h10"/>
+            <path d="M19 16v6"/>
+            <path d="M22 19l-3-3-3 3"/>
+          </svg>
+        </div>
+        <div class="node-label">OpenRouter</div>
+      </div>
+
+      <!-- AI Models -->
+      <div class="models-grid">
+        <div class="card model-card">
+          <div class="model-logo perplexity">
+            <img src="https://logo.clearbit.com/perplexity.ai" alt="Perplexity">
+          </div>
+          <div class="model-info">
+            <div class="model-name">Perplexity</div>
+            <div class="model-version">sonar-reasoning</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card model-card">
+          <div class="model-logo gemini">
+            <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg" alt="Gemini">
+          </div>
+          <div class="model-info">
+            <div class="model-name">Google Gemini</div>
+            <div class="model-version">gemini-2.5-pro</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card model-card">
+          <div class="model-logo claude">
+            <img src="https://logo.clearbit.com/anthropic.com" alt="Claude">
+          </div>
+          <div class="model-info">
+            <div class="model-name">Claude</div>
+            <div class="model-version">claude-sonnet-4</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card model-card">
+          <div class="model-logo mistral">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="1" y="1" width="5" height="5" fill="#000"/>
+              <rect x="9.5" y="1" width="5" height="5" fill="#F7D046"/>
+              <rect x="18" y="1" width="5" height="5" fill="#000"/>
+              <rect x="1" y="9.5" width="5" height="5" fill="#F7D046"/>
+              <rect x="9.5" y="9.5" width="5" height="5" fill="#000"/>
+              <rect x="18" y="9.5" width="5" height="5" fill="#F7D046"/>
+              <rect x="1" y="18" width="5" height="5" fill="#000"/>
+              <rect x="9.5" y="18" width="5" height="5" fill="#F7D046"/>
+              <rect x="18" y="18" width="5" height="5" fill="#000"/>
+            </svg>
+          </div>
+          <div class="model-info">
+            <div class="model-name">Mistral</div>
+            <div class="model-version">mistral-large-2411</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card model-card">
+          <div class="model-logo chatgpt">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT">
+          </div>
+          <div class="model-info">
+            <div class="model-name">ChatGPT</div>
+            <div class="model-version">gpt-4.5-preview</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

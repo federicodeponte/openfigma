@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Storage - Cursor Style</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0b;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .step-badge {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+
+    .step-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* AI Models */
+    .models-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .model-card {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 200px;
+    }
+
+    .model-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .model-logo img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .model-logo.perplexity { background: #1a1a1a; }
+    .model-logo.gemini { background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%); }
+    .model-logo.claude { background: #d4a574; }
+    .model-logo.mistral { background: #fff; }
+    .model-logo.chatgpt { background: #10a37f; }
+
+    .model-info { flex: 1; min-width: 0; }
+
+    .model-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f5f5f5;
+    }
+
+    .model-version {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.35);
+      font-family: 'SF Mono', Monaco, monospace;
+    }
+
+    .model-status {
+      width: 22px;
+      height: 22px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #22c55e;
+    }
+
+    /* Center node */
+    .center-node {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .node-box {
+      width: 110px;
+      height: 110px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 
+        0 0 40px rgba(34, 197, 94, 0.3),
+        0 0 80px rgba(34, 197, 94, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .node-icon { color: white; }
+
+    .node-label {
+      position: absolute;
+      bottom: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 15px;
+      font-weight: 600;
+      color: #f5f5f5;
+      white-space: nowrap;
+    }
+
+    /* Output cards */
+    .outputs-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .output-card {
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 200px;
+    }
+
+    .output-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #22c55e;
+    }
+
+    .output-text .title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f5f5f5;
+    }
+
+    .output-text .subtitle {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 2px;
+    }
+
+    /* Connections */
+    .connections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .connection-line {
+      stroke: url(#lineGradient);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.6;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+
+    .connection-line { animation: pulse 3s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="step-badge">
+      <div class="step-number">3</div>
+      <span class="step-label">Data Aggregation</span>
+    </div>
+
+    <svg class="connections" viewBox="0 0 1100 400" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#22c55e;stop-opacity:0.3" />
+          <stop offset="50%" style="stop-color:#16a34a;stop-opacity:0.6" />
+          <stop offset="100%" style="stop-color:#22c55e;stop-opacity:0.3" />
+        </linearGradient>
+      </defs>
+      <!-- Inputs to center -->
+      <path class="connection-line" d="M 225 60 Q 340 60 340 200 Q 340 200 420 200" />
+      <path class="connection-line" d="M 225 130 Q 320 130 320 200 Q 320 200 420 200" />
+      <path class="connection-line" d="M 225 200 Q 340 200 420 200" />
+      <path class="connection-line" d="M 225 270 Q 320 270 320 200 Q 320 200 420 200" />
+      <path class="connection-line" d="M 225 340 Q 340 340 340 200 Q 340 200 420 200" />
+      <!-- Center to outputs -->
+      <path class="connection-line" d="M 530 200 Q 640 200 640 100 Q 640 100 720 100" />
+      <path class="connection-line" d="M 530 200 Q 640 200 640 200 Q 640 200 720 200" />
+      <path class="connection-line" d="M 530 200 Q 640 200 640 300 Q 640 300 720 300" />
+    </svg>
+
+    <div class="flow">
+      <!-- AI Models Input -->
+      <div class="models-grid">
+        <div class="card model-card">
+          <div class="model-logo perplexity">
+            <img src="https://logo.clearbit.com/perplexity.ai" alt="Perplexity">
+          </div>
+          <div class="model-info">
+            <div class="model-name">Perplexity</div>
+            <div class="model-version">sonar-reasoning</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card model-card">
+          <div class="model-logo gemini">
+            <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg" alt="Gemini">
+          </div>
+          <div class="model-info">
+            <div class="model-name">Google Gemini</div>
+            <div class="model-version">gemini-2.5-pro</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card model-card">
+          <div class="model-logo claude">
+            <img src="https://logo.clearbit.com/anthropic.com" alt="Claude">
+          </div>
+          <div class="model-info">
+            <div class="model-name">Claude</div>
+            <div class="model-version">claude-sonnet-4</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card model-card">
+          <div class="model-logo mistral">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="1" y="1" width="5" height="5" fill="#000"/>
+              <rect x="9.5" y="1" width="5" height="5" fill="#F7D046"/>
+              <rect x="18" y="1" width="5" height="5" fill="#000"/>
+              <rect x="1" y="9.5" width="5" height="5" fill="#F7D046"/>
+              <rect x="9.5" y="9.5" width="5" height="5" fill="#000"/>
+              <rect x="18" y="9.5" width="5" height="5" fill="#F7D046"/>
+              <rect x="1" y="18" width="5" height="5" fill="#000"/>
+              <rect x="9.5" y="18" width="5" height="5" fill="#F7D046"/>
+              <rect x="18" y="18" width="5" height="5" fill="#000"/>
+            </svg>
+          </div>
+          <div class="model-info">
+            <div class="model-name">Mistral</div>
+            <div class="model-version">mistral-large-2411</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card model-card">
+          <div class="model-logo chatgpt">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT">
+          </div>
+          <div class="model-info">
+            <div class="model-name">ChatGPT</div>
+            <div class="model-version">gpt-4.5-preview</div>
+          </div>
+          <div class="model-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Node -->
+      <div class="center-node">
+        <div class="node-box">
+          <svg class="node-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+          </svg>
+        </div>
+        <div class="node-label">Database</div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="outputs-stack">
+        <div class="card output-card">
+          <div class="output-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div class="output-text">
+            <div class="title">Mentions</div>
+            <div class="subtitle">Brand visibility scores</div>
+          </div>
+        </div>
+
+        <div class="card output-card">
+          <div class="output-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="output-text">
+            <div class="title">Competitors</div>
+            <div class="subtitle">Comparative analysis</div>
+          </div>
+        </div>
+
+        <div class="card output-card">
+          <div class="output-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+              <path d="M2 12h20"/>
+            </svg>
+          </div>
+          <div class="output-text">
+            <div class="title">Context</div>
+            <div class="subtitle">Knowledge graph</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
