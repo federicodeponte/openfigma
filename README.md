@@ -1,102 +1,144 @@
-# OpenFigma
+# OpenFigma v2 - Universal Graphics Library
 
-Open-source Figma-style design system for AI/ML pipeline diagrams. Dark theme, glassmorphism, YC/Cursor-level aesthetics.
+> Component-based, themeable graphics generation from JSON config. DRY components, Hero Icons, full customization.
 
-![Diagram Preview](exports/cursor-style-2-openrouter.png)
+## 🎨 What's New in v2
 
-## ✨ Features
+- **Component System**: Reusable, composable components
+- **JSON Config**: Build any graphic from config
+- **Theme Support**: Colors, fonts, spacing per client
+- **Hero Icons**: 12+ built-in icons
+- **Advanced Components**: Charts, flows, timelines, comparisons
+- **Scalable**: Works for any business/use case
 
-- **Dark mode first** - #0a0a0b background
-- **Glassmorphism** - `backdrop-filter: blur(20px)` cards
-- **Gradient accents** - Purple → Green → Orange color progression
-- **Animated connections** - Pulsing SVG flow lines
-- **Real brand logos** - AI platform icons (Perplexity, Gemini, Claude, Mistral, ChatGPT)
-- **Self-contained HTML** - No build tools required
+## 📦 Components
 
-## 📁 Structure
+### Basic Components
+- `badge`: Top badge/label
+- `headline`: Large headline text
+- `quote_card`: Testimonial/quote card
+- `metric_card`: Statistics/metric display
+- `cta_card`: Call-to-action card
+- `infographic_card`: Process/steps display
+- `logo_card`: Branding footer
 
-```
-openfigma/
-├── diagrams/           # HTML source files
-│   ├── diagram-1-cursor-style.html   # Context Analysis (Brain)
-│   ├── diagram-2-cursor-style.html   # Query Distribution (OpenRouter)
-│   ├── diagram-3-cursor-style.html   # Data Aggregation (Database)
-│   └── diagram-4-cursor-style.html   # Content Generation (Article)
-├── exports/            # High-res PNG exports
-│   ├── cursor-style-1-brain.png
-│   ├── cursor-style-2-openrouter.png
-│   ├── cursor-style-3-database.png
-│   └── cursor-style-4-article.png
-└── assets/             # Additional resources
-```
+### Advanced Components
+- `process_flow`: Connected steps with arrows
+- `bar_chart`: Data visualization
+- `timeline`: Event timeline with icons
+- `comparison`: Before/After side-by-side
+- `feature_grid`: Icon + text grid layouts
+- `stats_dashboard`: Multi-metric displays
+- `progress_bar`: Progress indicators
 
-## 🎨 Design System
+## 🚀 Quick Start
 
-### Colors
-```css
---background: #0a0a0b
---card-bg: rgba(255, 255, 255, 0.03)
---card-border: rgba(255, 255, 255, 0.06)
---text-primary: #f5f5f5
---text-muted: rgba(255, 255, 255, 0.4)
-
-/* Accent gradients */
---purple: linear-gradient(135deg, #6366f1, #8b5cf6)
---green: linear-gradient(135deg, #22c55e, #16a34a)
---orange: linear-gradient(135deg, #f97316, #ea580c)
-```
-
-### Typography
-- **Font**: Inter (400, 500, 600, 700)
-- **Monospace**: SF Mono / Monaco (for model versions)
-
-### Components
-- Glassmorphism cards with hover states
-- Gradient center nodes with glow effects
-- AI platform logo badges
-- Animated SVG connection lines
-- Step badges with labels
-
-## 🚀 Usage
-
-### View in Browser
-Simply open any HTML file directly:
+### Installation
 ```bash
-open diagrams/diagram-1-cursor-style.html
+pip install -r requirements.txt
+playwright install chromium  # For PNG conversion
 ```
 
-### Export to PNG/PDF
-1. Open HTML in browser
-2. Right-click → Print → Save as PDF
-3. Or use browser screenshot tools
+### Basic Usage
+```python
+from openfigma import GraphicsBuilder
 
-### Customize
-Edit the HTML/CSS directly - everything is self-contained with inline styles.
+builder = GraphicsBuilder()
 
-## 📸 Diagrams
+config = {
+    "theme": {
+        "accent": "#6366f1",
+        "background": "#ffffff"
+    },
+    "components": [
+        {
+            "type": "badge",
+            "content": {"text": "Case Study", "icon": "case-study"}
+        },
+        {
+            "type": "headline",
+            "content": {"text": "Amazing Results", "size": "large"}
+        },
+        {
+            "type": "logo_card",
+            "content": {
+                "client_name": "TechCorp",
+                "provider_name": "SCAILE"
+            }
+        }
+    ]
+}
 
-| # | Name | Description |
-|---|------|-------------|
-| 1 | **Brain** | Context analysis: Website + Competitors → Target Personas + Search Queries |
-| 2 | **OpenRouter** | Query distribution: Search Queries → AI Models (5 platforms) |
-| 3 | **Database** | Data aggregation: AI responses → Mentions, Competitors, Context |
-| 4 | **Article** | Content generation: Database + Crawl + Research → AEO Article |
+html = builder.build_from_config(config)
+# Returns HTML that can be converted to PNG
+```
 
-## 🤖 AI Models Shown (December 2025)
+### Custom Theme
+```python
+from openfigma import GraphicsBuilder, Theme
 
-| Platform | Model | Logo |
-|----------|-------|------|
-| Perplexity | sonar-pro | ✅ |
-| Google Gemini | gemini-3.0-pro | ✅ |
-| Claude | claude-opus-4.5 | ✅ |
-| Mistral | mixtral-8x22b | ✅ |
-| ChatGPT | gpt-5 | ✅ |
+custom_theme = Theme(
+    accent="#ff6b6b",
+    background="#1a1a1a",
+    text_primary="#ffffff",
+    grid_enabled=False
+)
+
+builder = GraphicsBuilder(theme=custom_theme)
+html = builder.build_from_config(config)
+```
+
+## 📊 Examples
+
+See `examples/` folder for complete examples:
+- `basic.py` - Simple graphics
+- `advanced.py` - Charts, flows, timelines
+- `custom_theme.py` - Brand-specific themes
+
+## 🎨 Theme Options
+
+```python
+Theme(
+    # Colors
+    accent="#6366f1",
+    background="#f8f8f8",
+    surface="#ffffff",
+    text_primary="#1a1a1a",
+    
+    # Fonts
+    font_family="'Inter', sans-serif",
+    font_headline="800",
+    
+    # Spacing
+    padding_large="60px",
+    gap_medium="24px",
+    
+    # Grid
+    grid_enabled=False,
+    
+    # ... 30+ options
+)
+```
+
+## 🎯 Use Cases
+
+- Blog graphics
+- Social media posts
+- Marketing materials
+- Case study visuals
+- Dashboard screenshots
+- Process diagrams
+- Data visualizations
 
 ## 📄 License
 
 MIT - Use freely for your own projects.
 
+## 🔗 Links
+
+- [Blog Writer (openblog)](https://github.com/federicodeponte/openblog) - Uses openfigma
+- [Original v1](./diagrams/) - AI/ML pipeline diagrams
+
 ---
 
-Made with ❤️ by SCAILE
-
+v2.0 - Rebuilt as universal graphics library
