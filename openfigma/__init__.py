@@ -13,6 +13,8 @@ from .components import (
     GraphicsBuilder,
     Theme,
     ComponentRenderer,
+    dark_theme,
+    linkedin_theme,
 )
 
 from .advanced import (
@@ -20,7 +22,13 @@ from .advanced import (
     AdvancedComponentRenderer,
 )
 
-__version__ = "1.0.0"
+from .export import (
+    html_to_png,
+    export_config_to_png,
+    PNGExporter,
+)
+
+__version__ = "2.2.0"
 
 __all__ = [
     "GraphicsBuilder",
@@ -28,5 +36,10 @@ __all__ = [
     "ComponentRenderer",
     "HeroIcons",
     "AdvancedComponentRenderer",
+    "dark_theme",
+    "linkedin_theme",
+    "html_to_png",
+    "export_config_to_png",
+    "PNGExporter",
 ]
 

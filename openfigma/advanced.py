@@ -13,6 +13,14 @@ Components:
 """
 
 from typing import Dict, Any, List, Optional, Literal
+from html import escape as html_escape
+
+
+def escape_html(text: str) -> str:
+    """Escape HTML special characters to prevent XSS."""
+    if text is None:
+        return ""
+    return html_escape(str(text), quote=True)
 
 
 class HeroIcons:
@@ -76,7 +84,7 @@ class AdvancedComponentRenderer:
             
             steps_html.append(f'''<div class="flow-step">
         <div class="step-number">{i+1}</div>
-        <div class="step-text">{step}</div>
+        <div class="step-text">{escape_html(step)}</div>
       </div>
       {arrow_html}''')
         
@@ -94,7 +102,7 @@ class AdvancedComponentRenderer:
             steps_html.append(f'''<div class="flow-item">
         <div class="flow-step vertical">
           <div class="step-number">{i+1}</div>
-          <div class="step-text">{step}</div>
+          <div class="step-text">{escape_html(step)}</div>
         </div>
         {connector}
       </div>''')
@@ -114,13 +122,13 @@ class AdvancedComponentRenderer:
         bars_html = []
         for item in data:
             value = item.get("value", 0)
-            label = item.get("label", "")
+            label = escape_html(item.get("label", ""))
             height_percent = (value / max_value * 100) if max_value > 0 else 0
-            
+
             bars_html.append(f'''<div class="bar-item">
         <div class="bar-container">
           <div class="bar-fill" style="height: {height_percent}%;">
-            <span class="bar-value">{value}</span>
+            <span class="bar-value">{escape_html(str(value))}</span>
           </div>
         </div>
         <div class="bar-label">{label}</div>
@@ -137,11 +145,11 @@ class AdvancedComponentRenderer:
         """Render timeline visualization."""
         events_html = []
         for i, event in enumerate(events):
-            title = event.get("title", "")
-            date = event.get("date", "")
-            description = event.get("description", "")
+            title = escape_html(event.get("title", ""))
+            date = escape_html(event.get("date", ""))
+            description = escape_html(event.get("description", ""))
             icon = event.get("icon", "clock")
-            
+
             events_html.append(f'''<div class="timeline-event">
         <div class="timeline-marker">
           {HeroIcons.render_icon(icon, "28", theme.accent, "2.5")}
@@ -162,19 +170,26 @@ class AdvancedComponentRenderer:
         theme: Any,
     ) -> str:
         """Render side-by-side comparison."""
+        left_label = escape_html(left.get("label", "Before"))
+        left_content = escape_html(left.get("content", ""))
+        left_stats = escape_html(left.get("stats", ""))
+        right_label = escape_html(right.get("label", "After"))
+        right_content = escape_html(right.get("content", ""))
+        right_stats = escape_html(right.get("stats", ""))
+
         return f'''<div class="comparison">
       <div class="comparison-side left">
-        <div class="comparison-label">{left.get("label", "Before")}</div>
-        <div class="comparison-content">{left.get("content", "")}</div>
-        {f'<div class="comparison-stats">{left.get("stats", "")}</div>' if left.get("stats") else ''}
+        <div class="comparison-label">{left_label}</div>
+        <div class="comparison-content">{left_content}</div>
+        {f'<div class="comparison-stats">{left_stats}</div>' if left.get("stats") else ''}
       </div>
       <div class="comparison-divider">
         <div class="vs-badge">VS</div>
       </div>
       <div class="comparison-side right">
-        <div class="comparison-label">{right.get("label", "After")}</div>
-        <div class="comparison-content">{right.get("content", "")}</div>
-        {f'<div class="comparison-stats highlight">{right.get("stats", "")}</div>' if right.get("stats") else ''}
+        <div class="comparison-label">{right_label}</div>
+        <div class="comparison-content">{right_content}</div>
+        {f'<div class="comparison-stats highlight">{right_stats}</div>' if right.get("stats") else ''}
       </div>
     </div>'''
     
@@ -188,9 +203,9 @@ class AdvancedComponentRenderer:
         features_html = []
         for feature in features:
             icon = feature.get("icon", "sparkles")
-            title = feature.get("title", "")
-            description = feature.get("description", "")
-            
+            title = escape_html(feature.get("title", ""))
+            description = escape_html(feature.get("description", ""))
+
             features_html.append(f'''<div class="feature-item">
         <div class="feature-icon">
           {HeroIcons.render_icon(icon, "48", theme.accent, "2")}
@@ -209,21 +224,23 @@ class AdvancedComponentRenderer:
         """Render stats dashboard with visual elements."""
         stats_html = []
         for stat in stats:
-            value = stat.get("value", "")
-            label = stat.get("label", "")
-            change = stat.get("change", "")
+            value = escape_html(stat.get("value", ""))
+            label = escape_html(stat.get("label", ""))
+            change = escape_html(stat.get("change", ""))
             icon = stat.get("icon", "chart-bar")
             trend = stat.get("trend", "up")  # up, down, neutral
-            
-            trend_class = f"trend-{trend}"
-            trend_icon = "arrow-trending-up" if trend == "up" else "arrow-right"
-            
+
+            # Validate trend to prevent CSS injection
+            valid_trends = ["up", "down", "neutral"]
+            safe_trend = trend if trend in valid_trends else "neutral"
+            trend_class = f"trend-{safe_trend}"
+
             stats_html.append(f'''<div class="stat-card">
         <div class="stat-header">
           <div class="stat-icon">
             {HeroIcons.render_icon(icon, "36", theme.accent, "2")}
           </div>
-          {f'<div class="stat-change {trend_class}">{change}</div>' if change else ''}
+          {f'<div class="stat-change {trend_class}">{change}</div>' if stat.get("change") else ''}
         </div>
         <div class="stat-value">{value}</div>
         <div class="stat-label">{label}</div>
@@ -240,11 +257,12 @@ class AdvancedComponentRenderer:
         show_percentage: bool = True,
     ) -> str:
         """Render progress bar."""
+        safe_label = escape_html(label)
         percentage = (value / max_value * 100) if max_value > 0 else 0
-        
+
         return f'''<div class="progress-bar-container">
       <div class="progress-label">
-        <span>{label}</span>
+        <span>{safe_label}</span>
         {f'<span class="progress-percentage">{percentage:.0f}%</span>' if show_percentage else ''}
       </div>
       <div class="progress-track">

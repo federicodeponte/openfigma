@@ -4,15 +4,28 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openfigma"
-version = "2.0.0"
-description = "Component-based graphics generation from JSON config"
+version = "2.2.0"
+description = "Component-based graphics generation from JSON config. LinkedIn posts, event posters, marketing materials."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [
     {name = "Federico De Ponte", email = "federico@scaile.tech"}
 ]
-keywords = ["graphics", "components", "json", "html", "png", "charts", "diagrams"]
+keywords = [
+    "graphics",
+    "components",
+    "json",
+    "html",
+    "png",
+    "charts",
+    "diagrams",
+    "linkedin",
+    "social-media",
+    "marketing",
+    "canva",
+    "design"
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -22,13 +35,31 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-dependencies = [
+dependencies = []
+
+[project.optional-dependencies]
+export = ["playwright>=1.40.0"]
+dev = [
+    "pytest>=7.0.0",
+    "playwright>=1.40.0",
+]
+all = [
     "playwright>=1.40.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/federicodeponte/openfigma"
 Repository = "https://github.com/federicodeponte/openfigma"
+Documentation = "https://github.com/federicodeponte/openfigma#readme"
+Issues = "https://github.com/federicodeponte/openfigma/issues"
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["openfigma*"]
+
+[tool.setuptools.package-data]
+openfigma = ["py.typed"]
