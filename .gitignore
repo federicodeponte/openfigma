@@ -3,3 +3,11 @@
 node_modules/
 .next/
 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+

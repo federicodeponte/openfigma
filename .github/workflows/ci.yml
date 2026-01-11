@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Check syntax
+        run: |
+          python -m py_compile openfigma/components.py
+          python -m py_compile openfigma/advanced.py
+          python -m py_compile openfigma/export.py
+
+      - name: Run tests
+        run: |
+          cd tests && python test_components.py
+
+      - name: Test imports
+        run: |
+          python -c "from openfigma import GraphicsBuilder, Theme, dark_theme, linkedin_theme"
+
+  test-export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install playwright
+          playwright install chromium
+          playwright install-deps
+
+      - name: Test PNG export
+        run: |
+          python -c "
+          from openfigma import GraphicsBuilder, linkedin_theme, html_to_png
+          builder = GraphicsBuilder(linkedin_theme())
+          config = {'components': [{'type': 'badge', 'content': {'text': 'CI Test'}}]}
+          html = builder.build_from_config(config, dimensions=(400, 300))
+          png = html_to_png(html, width=400, height=300)
+          assert len(png) > 1000, 'PNG should be generated'
+          print(f'PNG export test passed: {len(png)} bytes')
+          "
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check type hints coverage
+        run: |
+          python -c "
+          import ast
+          with open('openfigma/components.py', 'r') as f:
+              tree = ast.parse(f.read())
+          functions = [n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)]
+          with_hints = [f for f in functions if f.returns or any(a.annotation for a in f.args.args)]
+          coverage = len(with_hints) / len(functions) * 100
+          print(f'Type hint coverage: {coverage:.1f}%')
+          assert coverage >= 90, f'Type hint coverage {coverage}% is below 90%'
+          "
