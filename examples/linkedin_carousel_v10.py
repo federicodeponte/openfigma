@@ -420,16 +420,16 @@ body {{
       <svg width="200" height="200" viewBox="0 0 120 120" fill="none"><defs><linearGradient id="logoGradB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366f1"/><stop offset="100%" style="stop-color:#a855f7"/></linearGradient></defs><rect x="4" y="4" width="112" height="112" rx="28" fill="url(#logoGradB)"/><path d="M52 40L32 60L52 80" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M68 40L88 60L68 80" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="60" cy="60" r="6" fill="white"/></svg>
     </div>
     <h1 class="headline">Meet <span>openfigma</span></h1>
-    <p class="subhead">Code-first design library.<br>Write Python → Get Figma-quality graphics.</p>
+    <p class="subhead">A free tool that generates<br>designs from prompts.</p>
     <div class="features">
       <span class="feat primary">100% Open Source</span>
-      <span class="feat">No design skills needed</span>
-      <span class="feat">Python + HTML/CSS</span>
-      <span class="feat">Instant PNG export</span>
+      <span class="feat">No design skills</span>
+      <span class="feat">No subscriptions</span>
+      <span class="feat">No Figma needed</span>
     </div>
     <div class="pip-box">
-      <span class="dollar">$</span>
-      <code>pip install openfigma</code>
+      <span class="dollar">→</span>
+      <code>github.com/federicodeponte/openfigma</code>
     </div>
   </div>
   <div class="footer">{LOGO_SMALL}<span class="brand">openfigma</span></div>
@@ -437,7 +437,7 @@ body {{
 </body></html>"""
 
 # ============================================
-# SLIDE 7: CODE - Bold "4", clean window
+# SLIDE 7: HOW IT WORKS - 3 simple steps
 # ============================================
 SLIDE_7 = f"""<!DOCTYPE html><html><head><style>
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -464,13 +464,13 @@ body {{
   pointer-events: none;
 }}
 
-/* HERO: Giant "4" - 20% visible */
+/* HERO: Giant "3" */
 .hero-num {{
   position: absolute;
-  top: -120px; left: -100px;
+  top: -120px; right: -100px;
   font-size: 900px;
   font-weight: 900;
-  color: rgba(99, 102, 241, 0.12);
+  color: rgba(99, 102, 241, 0.1);
   line-height: 0.75;
   pointer-events: none;
 }}
@@ -478,100 +478,95 @@ body {{
 .slide {{ position: relative; z-index: 1; width: 100%; height: 100%; padding: 72px; display: flex; flex-direction: column; }}
 .slide-num {{ position: absolute; top: 64px; right: 72px; font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.25); letter-spacing: 0.2em; }}
 
-.header {{ margin-bottom: 36px; }}
+.header {{ margin-bottom: 48px; }}
 .label {{ font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.35); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 16px; }}
-.headline {{ font-size: 80px; font-weight: 900; line-height: 0.95; letter-spacing: -0.04em; }}
+.headline {{ font-size: 72px; font-weight: 900; line-height: 1.0; letter-spacing: -0.04em; }}
 .headline span {{
   background: linear-gradient(135deg, #818cf8, #c084fc);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }}
 
-.code-window {{
-  flex: 1;
-  background: rgba(6, 6, 12, 0.95);
-  border: 2px solid rgba(99, 102, 241, 0.25);
+.steps {{ flex: 1; display: flex; flex-direction: column; gap: 24px; }}
+
+.step {{
+  background: rgba(255,255,255,0.03);
+  border: 2px solid rgba(255,255,255,0.1);
   border-radius: 24px;
-  overflow: hidden;
-  display: flex; flex-direction: column;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2), 0 24px 64px rgba(0,0,0,0.4);
+  padding: 36px 40px;
+  display: flex; align-items: center; gap: 32px;
+}}
+.step.active {{
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.4);
 }}
 
-.window-header {{
-  background: rgba(255,255,255,0.04);
-  padding: 18px 24px;
-  display: flex; align-items: center; gap: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+.step-num {{
+  font-size: 56px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.15);
+  width: 80px;
+  flex-shrink: 0;
 }}
-.dots {{ display: flex; gap: 8px; }}
-.dot {{ width: 14px; height: 14px; border-radius: 50%; }}
-.dot.r {{ background: #ef4444; }}
-.dot.y {{ background: #eab308; }}
-.dot.g {{ background: #22c55e; }}
-.code-file {{ font-size: 14px; color: rgba(255,255,255,0.4); margin-left: 12px; font-family: 'SF Mono', Monaco, monospace; }}
+.step.active .step-num {{
+  color: #818cf8;
+}}
 
-.code-body {{
-  flex: 1; padding: 48px;
-  font-family: 'SF Mono', Monaco, monospace;
-  font-size: 26px; line-height: 2.4;
-  display: flex; flex-direction: column; justify-content: center;
+.step-content h3 {{
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
 }}
-.line {{ display: flex; }}
-.ln {{ color: rgba(255,255,255,0.2); width: 56px; flex-shrink: 0; }}
-.kw {{ color: #c084fc; }}
-.str {{ color: #4ade80; }}
-.fn {{ color: #60a5fa; }}
+.step-content p {{
+  font-size: 20px;
+  color: rgba(255,255,255,0.5);
+}}
+.step-content .tool {{
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  margin-top: 8px;
+  color: rgba(255,255,255,0.6);
+}}
 
-/* Output badge - more prominent */
-.output-box {{
-  position: absolute;
-  bottom: 180px; right: 72px;
-  display: flex; align-items: center; gap: 16px;
-  background: rgba(34, 197, 94, 0.15);
-  border: 2px solid rgba(34, 197, 94, 0.5);
-  padding: 20px 28px;
-  border-radius: 16px;
-  transform: rotate(2deg);
-  box-shadow: 0 8px 32px rgba(34, 197, 94, 0.25);
-}}
-.output-icon {{
-  width: 52px; height: 52px;
-  background: rgba(34, 197, 94, 0.25);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  color: #4ade80;
-}}
-.output-text h4 {{ font-size: 18px; font-weight: 700; color: #4ade80; margin-bottom: 2px; }}
-.output-text p {{ font-size: 14px; color: rgba(255,255,255,0.5); font-family: 'SF Mono', Monaco, monospace; }}
-
-.footer {{ display: flex; align-items: center; gap: 14px; }}
+.footer {{ display: flex; align-items: center; gap: 14px; margin-top: auto; }}
 .brand {{ font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.4); }}
 </style></head><body>
 <div class="bg-gradient"></div>
 <div class="grain"></div>
-<div class="hero-num">4</div>
+<div class="hero-num">3</div>
 
 <div class="slide">
   <div class="slide-num">07 / 08</div>
   <div class="header">
     <div class="label">How It Works</div>
-    <h1 class="headline"><span>4 lines</span> of Python</h1>
+    <h1 class="headline"><span>3 steps.</span> That's it.</h1>
   </div>
-  <div class="code-window">
-    <div class="window-header">
-      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-      <span class="code-file">create_post.py</span>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Clone the repo</h3>
+        <p>Use Cursor or Claude Code</p>
+        <span class="tool">github.com/federicodeponte/openfigma</span>
+      </div>
     </div>
-    <div class="code-body">
-      <div class="line"><span class="ln">1</span><span class="kw">from</span> openfigma <span class="kw">import</span> html_to_png</div>
-      <div class="line"><span class="ln">2</span></div>
-      <div class="line"><span class="ln">3</span>html = <span class="str">"&lt;your template&gt;"</span></div>
-      <div class="line"><span class="ln">4</span><span class="fn">html_to_png</span>(html, <span class="str">"post.png"</span>)</div>
+    <div class="step active">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Type what you want</h3>
+        <p>"A metric card showing 500% growth"</p>
+      </div>
     </div>
-  </div>
-  <div class="output-box">
-    <div class="output-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div>
-    <div class="output-text"><h4>Ready to post</h4><p>→ post.png</p></div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>It generates the graphic</h3>
+        <p>Ready to post in seconds</p>
+      </div>
+    </div>
   </div>
   <div class="footer">{LOGO_SMALL}<span class="brand">openfigma</span></div>
 </div>
